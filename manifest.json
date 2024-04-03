@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "campaign-performance-analyzer",
+    "name": "marks",
     "version": "0.0.1",
     "action": {
         "default_title": "Click to show an alert"

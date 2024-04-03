@@ -1,14 +1,15 @@
-# Monster Campaign Performance Analyzer
+# Marks - useful bookmarks
 
 ## todos
 
--   doco!
--   check manifest - need all those permissions?
--
+- tidy this readme!
+- check manifest - need all those permissions?
+- remove pappaparse? or use it for import?
+- new tab and/or popup?
 
 ## What does this extension do?
 
-This extension provides more information about the performance of a campaign.
+Organize your bookmarks and notes into folders and subfolders. You can also add tags to your bookmarks to make them easier to find.
 
 ## How does it work?
 
