@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { useChromeStorageLocal } from 'use-chrome-storage';
 
 import './Popup.css';
@@ -11,6 +11,8 @@ const Popup = (): JSX.Element => {
         domain: string;
     }
 
+    const [isError, setIsError] = useState(false);
+    const [mark, setMark] = useState<Mark | null>(null);
     const [marks, setMarks, isPersistent, error, isInitialStateResolved]: [
         marks: Mark[],
         setMarks: Dispatch<SetStateAction<Mark[]>>,
@@ -19,7 +21,7 @@ const Popup = (): JSX.Element => {
         isInitialStateResolved: boolean,
     ] = useChromeStorageLocal('marksv1', [] as Mark[]);
 
-    const addTab = async () => {
+    const addTab = async (): Promise<void> => {
         const [tab] = await chrome.tabs.query({
             active: true,
             currentWindow: true,
@@ -29,53 +31,29 @@ const Popup = (): JSX.Element => {
         console.log(url, title, favIconUrl, domain);
 
         setMarks((marks) => [...marks, { url, title, favIconUrl, domain }]);
+
+        console.log(
+            'marks',
+            marks,
+            isPersistent,
+            error,
+            isInitialStateResolved
+        );
+
         if (error) {
             console.log('error', error, url);
-        }
-        console.log(
-            'marks',
-            marks,
-            isPersistent,
-            error,
-            isInitialStateResolved
-        );
-    };
-
-    const removeTab = async (pos: number) => {
-        const mark = marks[pos];
-        console.log('to remove: ', mark);
-
-        setMarks((marks) => [...marks.slice(0, pos), ...marks.slice(pos + 1)]);
-        if (error) {
-            console.log('error', error);
-        }
-        console.log(
-            'marks',
-            marks,
-            isPersistent,
-            error,
-            isInitialStateResolved
-        );
+            setIsError(true);
+        } else setMark({ url, title, favIconUrl, domain });
+        setIsError(false);
     };
 
     return (
         <>
             <h2>Marks - the useful bookmark manager</h2>
-
             <button onClick={addTab}>Add this tab to bookmarks</button>
             <div className="container">
-                <p>Bookmarks</p>
-                {marks.map((mark, _i) => (
-                    <div key={_i} className="card">
-                        {mark.title}
-                        <br />
-                        &nbsp;
-                        <br />
-                        <a href={mark.url}>{mark.domain}</a>
-                        <br />
-                        <button onClick={() => removeTab(_i)}>remove</button>
-                    </div>
-                ))}
+                {mark ? 'Success!' : ''}
+                {isError || error ? 'error!' : ''}
             </div>
         </>
     );
