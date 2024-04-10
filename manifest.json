@@ -3,19 +3,16 @@
     "name": "marks",
     "version": "0.0.1",
     "action": {
-        "default_title": "Click to show an alert"
+        "default_title": "Click to add",
+        "default_popup": "src/contexts/popup.html"
     },
-    "permissions": ["scripting", "activeTab", "tabs"],
-
+    "permissions": ["scripting", "activeTab", "tabs", "storage"],
+    "chrome_url_overrides": {
+        "newtab": "src/contexts/content.html"
+    },
     "background": {
         "service_worker": "src/contexts/service-worker.ts",
         "type": "module"
     },
-    "web_accessible_resources": [
-        {
-            "matches": ["https://*/*", "http://*/*"],
-            "resources": ["src/contexts/popup.html", "src/contexts/popup.tsx"]
-        }
-    ],
     "host_permissions": ["https://*/*", "http://*/*"]
 }

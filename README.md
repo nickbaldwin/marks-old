@@ -2,14 +2,15 @@
 
 ## todos
 
-- tidy this readme!
-- check manifest - need all those permissions?
-- remove pappaparse? or use it for import?
-- new tab and/or popup?
+-   tidy this readme!
+-   check manifest - need all those permissions?
+-   remove pappaparse? or use it for import?
+-   new tab and/or popup?
 
 ## What does this extension do?
 
-Organize your bookmarks and notes into folders and subfolders. You can also add tags to your bookmarks to make them easier to find.
+Organize your bookmarks and notes into folders and subfolders. You can also add tags to your bookmarks to make them
+easier to find.
 
 ## How does it work?
 
@@ -25,16 +26,24 @@ The extension is composed of four primary components:
 
 -   #### Service worker
 
-    This script runs in the background, and communicates with the content scripts running on all search pages, in order to sync and correctly persist settings used across all Monster domains.
+    This script runs in the background, and communicates with the content scripts running on all search pages, in order
+    to sync and correctly persist settings used across all Monster domains.
 
 -   #### Popup
-    When the extension icon is clicked, the popup is displayed in a new tab. Here a user can upload a file and the exention will parse the file and display the results.
+    When the extension icon is clicked, the popup is displayed in a new tab. Here a user can upload a file and the
+    exention will parse the file and display the results.
 
-In addition, there are numerous assets and build/configuration files that are used to generate the extension. This is described in the build process section.
+In addition, there are numerous assets and build/configuration files that are used to generate the extension. This is
+described in the build process section.
 
 ## How is it developed?
 
-This extension is developed in React and TypeScript, and uses Vite as the build tool. It also uses the CRXjs Vite plugin to simplify the development/build process for extensions (particularly HMR or Hot Module Replacement).
+This extension is developed in React and TypeScript, and uses Vite as the build tool. It also uses the CRXjs Vite plugin
+to simplify the development/build process for extensions (particularly HMR or Hot Module Replacement).
+
+## Chrome Storage
+
+https://github.com/onikienko/use-chrome-storage
 
 ## Linting & Formatting
 
@@ -58,9 +67,11 @@ export default {
 };
 ```
 
--   Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
+-   Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked`
+    or `plugin:@typescript-eslint/strict-type-checked`
 -   Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
--   Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+-   Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and
+    add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
 
 https://github.com/facebook/react
 https://github.com/microsoft/TypeScript

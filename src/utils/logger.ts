@@ -1,4 +1,4 @@
-const appName = 'MJSE';
+const appName = 'MARKS';
 export const isLog: boolean = true;
 
 export interface Log {

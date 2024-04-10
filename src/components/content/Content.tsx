@@ -3,7 +3,7 @@ import { useChromeStorageLocal } from 'use-chrome-storage';
 
 import './Popup.css';
 
-const Popup = (): JSX.Element => {
+const Content = (): JSX.Element => {
     interface Mark {
         title: string;
         url: string;
@@ -81,4 +81,4 @@ const Popup = (): JSX.Element => {
     );
 };
 
-export default Popup;
+export default Content;
