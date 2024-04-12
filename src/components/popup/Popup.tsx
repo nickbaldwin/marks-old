@@ -1,25 +1,16 @@
-import { Dispatch, SetStateAction, useState } from 'react';
-import { useChromeStorageLocal } from 'use-chrome-storage';
+import { useState } from 'react';
 
+import { useStore } from '../../store/store.ts';
+
+import { parseUrl } from '../../helpers/domain.ts';
 import './Popup.css';
 
 const Popup = (): JSX.Element => {
-    interface Mark {
-        title: string;
-        url: string;
-        favIconUrl: string;
-        domain: string;
-    }
-
     const [isError, setIsError] = useState(false);
-    const [mark, setMark] = useState<Mark | null>(null);
-    const [marks, setMarks, isPersistent, error, isInitialStateResolved]: [
-        marks: Mark[],
-        setMarks: Dispatch<SetStateAction<Mark[]>>,
-        isPersistent: boolean,
-        error: string,
-        isInitialStateResolved: boolean,
-    ] = useChromeStorageLocal('marksv1', [] as Mark[]);
+    const [errorMessage, setErrorMessage] = useState('');
+    // const [mark, setMark] = useState<Mark | null>(null);
+
+    const addMark = useStore((state) => state.addMark);
 
     const addTab = async (): Promise<void> => {
         const [tab] = await chrome.tabs.query({
@@ -27,24 +18,21 @@ const Popup = (): JSX.Element => {
             currentWindow: true,
         });
         const { url = '', title = '', favIconUrl = '' } = tab;
-        const domain = new URL(url).hostname;
+
+        // todo - deal with url errors
+        const domain = parseUrl(url) || '';
+        if (!domain) {
+            setIsError(true);
+            setErrorMessage('Invalid URL');
+            return;
+        }
         console.log(url, title, favIconUrl, domain);
 
-        setMarks((marks) => [...marks, { url, title, favIconUrl, domain }]);
-
-        console.log(
-            'marks',
-            marks,
-            isPersistent,
-            error,
-            isInitialStateResolved
-        );
-
-        if (error) {
-            console.log('error', error, url);
-            setIsError(true);
-        } else setMark({ url, title, favIconUrl, domain });
-        setIsError(false);
+        addMark({
+            url,
+            originalDescription: title,
+            originalTitle: title,
+        });
     };
 
     return (
@@ -52,8 +40,8 @@ const Popup = (): JSX.Element => {
             <h2>Marks - the useful bookmark manager</h2>
             <button onClick={addTab}>Add this tab to bookmarks</button>
             <div className="container">
-                {mark ? 'Success!' : ''}
-                {isError || error ? 'error!' : ''}
+                {isError ? 'error!' : ''}
+                {isError ? errorMessage : ''}
             </div>
         </>
     );

@@ -1,68 +1,154 @@
 import { create } from 'zustand';
+import { includeChromeStore } from 'zustand-chrome-local-storage';
 import zukeeper from 'zukeeper';
-import { DisplayJob, transformJobs } from '../schema/transform';
+import { v4 as uuid } from 'uuid';
 
-interface ResultsData {
-    timestamp: string;
-    size: number;
-    jobIds: string[];
+// import { subscribeWithSelector } from 'zustand/middleware';
+
+export interface CommonInfo {
+    id: string;
+    version: number;
+    createdAt: number;
+    updatedAt: number;
+    title: string;
+    description: string;
 }
+
+export interface UrlInfo {
+    url: string;
+    originalTitle: string;
+    originalDescription: string;
+}
+
+export interface MarkInfo {
+    domain: string;
+    originalDomain: string;
+    favIconUrl: string;
+    imageUrl: string;
+    bgColor: string;
+}
+
+export interface List {
+    list: Array<string>;
+}
+
+export class Mark {
+    id: string;
+    url: string;
+    originalTitle: string;
+    originalDescription: string;
+
+    constructor(urlInfo: UrlInfo) {
+        this.id = uuid();
+        this.url = urlInfo.url;
+        this.originalTitle = urlInfo.originalTitle;
+        this.originalDescription = urlInfo.originalDescription;
+    }
+}
+
+export interface Collection {
+    id: string;
+}
+
+export interface Folder {
+    id: string;
+}
+
+export interface MarksMap {
+    [key: string]: Mark;
+}
+
+export interface CollectionsMap {
+    [key: string]: Collection;
+}
+
+export interface FoldersMap {
+    [key: string]: Folder;
+}
+
+export type MarksList = Array<string>;
+
+export type CollectionsList = Array<string>;
+
+export type FoldersList = Array<string>;
+
+export interface Data {}
 
 interface State {
     bears: number;
     increase: (by: number) => void;
 
-    resultsSize: number;
-    results: DisplayJob[];
-    resultsLast: ResultsData | null;
-    resultsHistory: ResultsData[];
-    updateResults: (add: ResultsData) => void;
+    results: string[];
+    updateResults: (add: string) => void;
 
-    url: string;
-    urlHistory: string[];
-    updateUrl: (to: string) => void;
+    marksList: MarksList;
+    marksMap: MarksMap;
+    addMark: (add: UrlInfo) => void;
+    removeMark: (id: string) => void;
+
+    collectionsList: CollectionsList;
+    collectionsMap: CollectionsMap;
+    addCollections: (add: Collection) => void;
+
+    foldersList: FoldersList;
+    foldersMap: FoldersMap;
+    addFolders: (add: Folder) => void;
 }
 
 export const useStore = create<State>()(
-    // todo - config for devtools
-    // @ts-expect-error any
-    zukeeper((set) => ({
-        bears: 0,
+    // subscribeWithSelector(
+    includeChromeStore(
+        // todo - config for devtools
+        // @ts-expect-error any
+        zukeeper((set) => ({
+            bears: 0,
+            increase: (by: number) =>
+                set((state: { bears: number }) => ({
+                    bears: state.bears + by,
+                })),
 
-        results: [],
-        resultsSize: 0,
-        resultsLast: null,
-        resultsHistory: [],
+            results: [],
+            updateResults: (add: string) => {
+                set((state: { results: string[] }) => ({
+                    results: [...state.results, add],
+                }));
+            },
 
-        url: '',
-        urlHistory: [],
-
-        increase: (by: number) =>
-            set((state: { bears: number }) => ({ bears: state.bears + by })),
-        updateResults: (payload: object) => {
-            const results = {
-                timestamp: new Date().toISOString(), // todo send in
-                // @ts-expect-error todo typing
-                size: payload?.jobResults?.length || 0,
-                jobIds:
-                    // @ts-expect-error todo typing
-                    payload?.jobResults?.map(
-                        (j: { jobId: string }) => j.jobId
-                    ) || [],
-            };
-            console.log(results);
-
-            // @ts-expect-error ugh
-            const displayJobs = transformJobs(payload?.jobResults || []);
-            console.log(displayJobs);
-            set((state: { resultsHistory: ResultsData[] }) => ({
-                results: displayJobs,
-                resultsHistory: [...state.resultsHistory, results],
-                resultsSize: results.size,
-                resultsLast: results,
-            }));
-        },
-    }))
+            marksList: [],
+            marksMap: {},
+            // todo - check for uuid collision first
+            addMark: (add: UrlInfo) => {
+                const mark = new Mark(add);
+                set((state: { marksList: string[]; marksMap: MarksMap }) => ({
+                    marksList: [...state.marksList, mark.id],
+                    marksMap: {
+                        ...state.marksMap,
+                        [mark.id]: mark,
+                    },
+                }));
+            },
+            removeMark: (id: string) => {
+                set((state: { marksList: string[]; marksMap: MarksMap }) => {
+                    if (!state.marksMap[id]) {
+                        return state;
+                    } else {
+                        const i = state.marksList.indexOf(id);
+                        const list = [...state.marksList];
+                        if (i > -1) {
+                            list.splice(i, 1);
+                        }
+                        const map = { ...state.marksMap };
+                        delete map[id];
+                        return {
+                            marksList: list,
+                            marksMap: map,
+                        };
+                    }
+                });
+            },
+        }))
+    )
+    // )
 );
 
 // todo - config for devtools

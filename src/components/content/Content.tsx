@@ -1,57 +1,48 @@
-import { Dispatch, SetStateAction } from 'react';
-import { useChromeStorageLocal } from 'use-chrome-storage';
+import { MarksList, MarksMap, useStore } from '../../store/store.ts';
 
 import './Content.css';
 
 const Content = (): JSX.Element => {
-    interface Mark {
-        title: string;
-        url: string;
-        favIconUrl: string;
-        domain: string;
-    }
+    const marksList: MarksList = useStore((state) => state.marksList);
 
-    const [marks, setMarks, isPersistent, error, isInitialStateResolved]: [
-        marks: Mark[],
-        setMarks: Dispatch<SetStateAction<Mark[]>>,
-        isPersistent: boolean,
-        error: string,
-        isInitialStateResolved: boolean,
-    ] = useChromeStorageLocal('marksv1', [] as Mark[]);
+    const marks: MarksMap = useStore((state) => state.marksMap);
+    const addMark = useStore((state) => state.addMark);
+    const removeMark = useStore((state) => state.removeMark);
 
-    const removeTab = async (pos: number) => {
-        const mark = marks[pos];
-        console.log('to remove: ', mark);
-
-        setMarks((marks) => [...marks.slice(0, pos), ...marks.slice(pos + 1)]);
-        if (error) {
-            console.log('error', error);
-        }
-        console.log(
-            'marks',
-            marks,
-            isPersistent,
-            error,
-            isInitialStateResolved
-        );
-    };
+    const bears = useStore((state) => state.bears);
+    const inc = useStore((state) => state.increase);
 
     return (
         <>
             <h2>Marks - the useful bookmark manager</h2>
             <div className="container">
-                {marks.map((mark, _i) => (
+                {marksList.map((id: string, _i: number) => (
                     <div key={_i} className="card">
-                        {mark.title}
+                        {marks[id].id}
+                        <br />
+                        {marks[id].originalTitle}
                         <br />
                         &nbsp;
                         <br />
-                        <a href={mark.url}>{mark.domain}</a>
+                        <a href={marks[id].url}>{marks[id].url}</a>
                         <br />
-                        <button onClick={() => removeTab(_i)}>remove</button>
+                        <button onClick={() => removeMark(id)}>remove</button>
                     </div>
                 ))}
+                <button
+                    onClick={() =>
+                        addMark({
+                            originalTitle: 'Google',
+                            originalDescription: 'Search engine',
+                            url: 'https://www.google.com',
+                        })
+                    }
+                >
+                    add mark
+                </button>
             </div>
+            <p>bears: {bears}</p>
+            <button onClick={() => inc(1)}>increase</button>
         </>
     );
 };
