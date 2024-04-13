@@ -41,7 +41,13 @@ described in the build process section.
 This extension is developed in React and TypeScript, and uses Vite as the build tool. It also uses the CRXjs Vite plugin
 to simplify the development/build process for extensions (particularly HMR or Hot Module Replacement).
 
+## State
+
+https://github.com/pmndrs/zustand
+
 ## Chrome Storage
+
+https://github.com/sinanbekar/webext-zustand/tree/main
 
 https://github.com/onikienko/use-chrome-storage
 
