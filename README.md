@@ -2,10 +2,10 @@
 
 ## todos
 
-- tidy this readme!
-- check manifest - need all those permissions?
-- remove pappaparse? or use it for import?
-- new tab and/or popup?
+-   tidy this readme!
+-   check manifest - need all those permissions?
+-   remove pappaparse? or use it for import?
+-   new tab and/or popup?
 
 ## What does this extension do?
 
@@ -64,7 +64,7 @@ ESLint, Prettier
 
 If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-- Configure the top-level `parserOptions` property like this:
+-   Configure the top-level `parserOptions` property like this:
 
 ```js
 export default {
@@ -78,11 +78,11 @@ export default {
 };
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked`
-  or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and
-  add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+-   Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked`
+    or `plugin:@typescript-eslint/strict-type-checked`
+-   Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
+-   Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and
+    add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
 
 https://github.com/facebook/react
 https://github.com/microsoft/TypeScript
